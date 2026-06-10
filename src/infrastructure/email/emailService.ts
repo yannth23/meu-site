@@ -1,15 +1,14 @@
 import { sendMail } from 'resend';
 
-const sendEmail = async (to: string, subject: string, text: string) => {
+const sendDailyEmail = async () => {
   try {
-    await sendMail({
-      from: 'your-email@example.com',
-      to,
-      subject,
-      text,
+    const games = await cacheService.getGame(new Date().toISOString());
+    const subscribers = await getSubscribersFromDB();
+    subscribers.forEach((subscriber) => {
+      sendEmail(subscriber.email, 'Daily Soccer Games', games);
     });
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending daily email:', error);
   }
 };
 

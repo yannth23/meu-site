@@ -6,8 +6,6 @@ const queue = new Queue('games', {
   },
 });
 
-queue.on('error', (error) => {
-  console.error('Error in queue:', error);
-});
+queue.add('daily-email', {}, { repeat: { cron: '0 8 * * *' } });
 
 export default queue;
