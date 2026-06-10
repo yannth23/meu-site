@@ -12,6 +12,7 @@ export class FootballMatchService {
   async getTodayMatches(): Promise<FootballMatch[]> {
     // Fetch matches for the current day from a soccer API. This is where you'll integrate with your chosen external API, e.g., SportRadar or OpenLigaNet. Ensure to cache these results in Redis as per requirement #4.
     const today = new Date().toISOString().split('T')[0]; // Get the current date for filtering matches by day of year and month only (YYYY-MM)
-    return this.footballMatchRepository.find({ where: 'date_played geq :today, competition ILIKE "FIRST LEAGUE OF LONDON" } );
+    
+    return this.footballMatchRepository.find({ where: 'date_played geq :today, competition ILIKE "FIRST LEAGUE OF LONDON" });
   }
 }
