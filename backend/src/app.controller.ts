@@ -1,26 +1,13 @@
+// backend/src/app.controller.js
 import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import { InjectQueue } from '@nestjs/bull';
+import { FootballMatchService } from './football-match.service';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    @InjectQueue('football-queue') private readonly queue: any,
-  ) {}
+  constructor(private readonly footballMatchService: FootballMatchService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get('send-email')
-  sendEmail(): string {
-    this.queue.add('send-email', {
-      to: 'user@example.com',
-      subject: 'Hello from NestJS!',
-      text: 'Hello from NestJS!',
-    });
-    return 'Email sent!';
+  @Get('matches')
+  async getTodayMatches(): Promise<FootballMatch[]> {
+    return this.footballMatchService.getTodayMatches(); // This method should fetch matches for the current day from a soccer API and cache them in Redis before returning to avoid multiple external calls.
   }
 }
