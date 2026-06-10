@@ -8,6 +8,7 @@ model User {
   email    String   @unique
   password String
   favoriteTeams FavoriteTeam[]
+  preferences UserPreference?
 }
 
 model FavoriteTeam {
