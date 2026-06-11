@@ -1,40 +1,19 @@
+// entire content of the module configuration file ...
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppModule } from './app.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from '@nestjs/redis';
-import { BullModule } from '@nestjs/bull';
-import { PrismaService } from './prisma/prisma.service';
+import { RedisModule } from 'nest-redis';
+import { PrismaModule } from './prisma/prisma.module';
+import { BullModule, BullModuleOptions } from 'bullmq';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // Makes the ConfigService available throughout the application
-    }),
-    RedisModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        config: {
-          host: configService.get<string>('REDIS_HOST'),
-          port: configService.get<number>('REDIS_PORT'),
-          password: configService.get<string>('REDIS_PASSWORD'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        redis: {
-          host: configService.get<string>('REDIS_HOST'),
-          port: configService.get<number>('REDIS_PORT'),
-          password: configService.get<string>('REDIS_PASSWORD'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
+    ConfigModule.forRoot(),
+    RedisModule.registerFromConfig(),
+    AppModule,
+    PrismaModule,
+    BullModule.forRootAsync(BullModuleOptions),
   ],
-  controllers: [AppController],
-  providers: [AppService, PrismaService],
+  // ... goes in between
 })
 export class AppModule {}
