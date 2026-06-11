@@ -9,10 +9,10 @@ import { BullModule, BullModuleOptions } from 'bullmq';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    RedisModule.registerFromConfig(),
+    RedisModule.registerFromConfig(), // Ensure NestJS uses the configuration for connecting to both Redis and Prisma services
     AppModule,
     PrismaModule,
-    BullModule.forRootAsync(BullModuleOptions),
+    BullModule.forRootAsync(BullModuleOptions), // Set up Bul letter with asynchronous support as required by our application logic
   ],
   // ... goes in between
 })
