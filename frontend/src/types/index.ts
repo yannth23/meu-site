@@ -19,15 +19,43 @@ export interface UserPreference {
 
 export interface FootballMatch {
   id: string;
+
   date: string;
+
   championship: string;
+
   team1: string;
   team2: string;
+
   status: string;
+
+  team1Score?: number;
+  team2Score?: number;
+
   externalId?: string;
 }
 
 export interface AuthResponse {
   accessToken: string;
   user: User;
+}
+
+export interface Standing {
+  position: number;
+  teamId: number;
+  teamName: string;
+  points: number;
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goalsFor?: number;
+  goalsAgainst?: number;
+}
+
+export interface Scorer {
+  playerId: number;
+  playerName: string;
+  teamName: string;
+  goals: number;
 }

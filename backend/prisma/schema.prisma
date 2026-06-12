@@ -53,8 +53,8 @@ model FootballMatch {
   id           String   @id @default(cuid())
   date         DateTime
   championship String
-  team1        String
-  team2        String
+  homeTeam     String
+  awayTeam     String
   status       String
   externalId   String?  @unique
 

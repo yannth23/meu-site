@@ -1,9 +1,6 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000';
 
-async function request<T>(
-  path: string,
-  options?: RequestInit,
-): Promise<T> {
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   const res = await fetch(`${API_URL}${path}`, {
@@ -39,32 +36,64 @@ export const api = {
 
   // Matches
   getTodayMatches: () =>
-    request<{ id: string; date: string; championship: string; team1: string; team2: string; status: string }[]>(
-      '/matches',
-    ),
+    request<{
+      id: string;
+      date: string;
+      championship: string;
+      team1: string;
+      team2: string;
+      status: string;
+      team1Score?: number;
+      team2Score?: number;
+    }[]>('/matches'),
+
+  // Standings
+  getStandings: () =>
+    request<{
+      position: number;
+      teamId: number;
+      teamName: string;
+      points: number;
+      played: number;
+      wins: number;
+      draws: number;
+      losses: number;
+      goalsFor?: number;
+      goalsAgainst?: number;
+    }[]>('/standings'),
+
+  // Top Scorers
+  getTopScorers: () =>
+    request<{
+      playerId: number;
+      playerName: string;
+      teamName: string;
+      goals: number;
+    }[]>('/scorers'),
 
   // Favorites
   getFavoriteTeams: (userId: string) =>
     request<{ id: string; teamName: string }[]>(`/users/${userId}/teams`),
 
   addFavoriteTeam: (userId: string, teamName: string) =>
-    request(`/users/${userId}/teams`, {
+    request<{ id: string; teamName: string }>(`/users/${userId}/teams`, {
       method: 'POST',
       body: JSON.stringify({ teamName }),
     }),
 
   removeFavoriteTeam: (userId: string, teamName: string) =>
-    request(`/users/${userId}/teams/${encodeURIComponent(teamName)}`, {
+    request<void>(`/users/${userId}/teams/${encodeURIComponent(teamName)}`, {
       method: 'DELETE',
     }),
 
   // Preferences
   updatePreferences: (userId: string, receiveDailyNotifications: boolean) =>
-    request(`/users/${userId}/preferences`, {
+    request<{ receiveDailyNotifications: boolean }>(`/users/${userId}/preferences`, {
       method: 'PATCH',
       body: JSON.stringify({ receiveDailyNotifications }),
     }),
 
+  // User
   getUser: (userId: string) =>
     request<{
       id: string;
