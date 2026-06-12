@@ -37,8 +37,8 @@ export class FootballApiService {
           externalId: fixture.fixture.id.toString(),
           date: new Date(fixture.fixture.date),
           championship: fixture.league.name,
-          team1: fixture.teams.home.name,
-          team2: fixture.teams.away.name,
+          homeTeam: fixture.teams.home.name,
+          awayTeam: fixture.teams.away.name,
           status: fixture.fixture.status.short,
         },
       });

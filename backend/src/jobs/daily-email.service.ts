@@ -42,7 +42,7 @@ export class DailyEmailService {
       const favoriteTeams = user.favoriteTeams.map((t) => t.teamName);
 
       const filteredMatches = matches.filter(
-        (m) => favoriteTeams.includes(m.team1) || favoriteTeams.includes(m.team2),
+        (m) => favoriteTeams.includes(m.homeTeam) || favoriteTeams.includes(m.awayTeam),
       );
 
       if (!filteredMatches.length) {
@@ -63,14 +63,14 @@ export class DailyEmailService {
 }
 
 function buildEmailHtml(
-  matches: { team1: string; team2: string; championship: string; date: Date }[],
+  matches: { homeTeam: string; awayTeam: string; championship: string; date: Date }[],
 ): string {
   const rows = matches
     .map(
       (m) => `
       <tr>
         <td style="padding:8px 12px;border-bottom:1px solid #eee;">${m.championship}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #eee;font-weight:600;">${m.team1} vs ${m.team2}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #eee;font-weight:600;">${m.homeTeam} vs ${m.awayTeam}</td>
         <td style="padding:8px 12px;border-bottom:1px solid #eee;color:#666;">
           ${m.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
         </td>
