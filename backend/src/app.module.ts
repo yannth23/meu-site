@@ -4,9 +4,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { EmailModule } from './email/email.module';
-import { AppController } from './app.controller';
 import { JobsModule } from './jobs/jobs.module';
 import { FootballMatchModule } from './football-match/football-match.module';
+import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FootballMatchModule } from './football-match/football-match.module';
     EmailModule,
     JobsModule,
     FootballMatchModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })

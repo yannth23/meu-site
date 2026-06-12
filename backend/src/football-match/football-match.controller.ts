@@ -14,4 +14,14 @@ export class FootballMatchController {
   getByCompetition(@Query('name') name: string) {
     return this.footballMatchService.getMatchesByCompetition(name);
   }
+
+  @Get('standings')
+  getStandings() {
+    return this.footballMatchService.getStandings();
+  }
+
+  @Get('scorers')
+  getTopScorers() {
+    return this.footballMatchService.getTopScorers();
+  }
 }
