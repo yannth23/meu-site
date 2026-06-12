@@ -1,44 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://neondb_owner:npg_iBYPQG4tWr5w@ep-blue-cherry-aclzei33.sa-east-1.aws.neon.tech/neondb?sslmode=require"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id         String     @id @default(cuid())
-  email      String     @unique
-  password   String
-  name       String?
-  verified   Boolean    @default(false)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  favoriteTeams FavoriteTeam[]
-  preferences UserPreference?
-  refreshTokens RefreshToken[]
+  id             String            @id @default(cuid())
+  email          String            @unique
+  password       String
+  name           String?
+  verified       Boolean           @default(false)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  favoriteTeams  FavoriteTeam[]
+  preferences    UserPreference?
+  refreshTokens  RefreshToken[]
 }
 
 model RefreshToken {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FavoriteTeam {
-  id       String   @id @default(cuid())
+  id       String @id @default(cuid())
   userId   String
   teamName String
-  user     User     @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserPreference {
-  id                         String    @id @default(cuid())
-  userId                     String    @unique
-  receiveDailyNotifications  Boolean   @default(true)
-  createdAt                  DateTime  @default(now())
-  updatedAt                  DateTime  @updatedAt
-  user                       User      @relation(fields: [userId], references: [id])
+  id                        String   @id @default(cuid())
+  userId                    String   @unique
+  receiveDailyNotifications Boolean  @default(true)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FootballMatch {
@@ -48,5 +56,8 @@ model FootballMatch {
   team1        String
   team2        String
   status       String
-  externalId   String?  @unique // To store ID from external API and prevent duplicates
+  externalId   String?  @unique
+
+  @@index([date])
+  @@index([championship])
 }

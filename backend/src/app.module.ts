@@ -1,19 +1,23 @@
-// entire content of the module configuration file ...
 import { Module } from '@nestjs/common';
-import { AppModule } from './app.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from 'nest-redis';
+import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from './prisma/prisma.module';
-import { BullModule, BullModuleOptions } from 'bullmq';
+import { UserModule } from './user/user.module';
+import { EmailModule } from './email/email.module';
+import { AppController } from './app.controller';
+import { JobsModule } from './jobs/jobs.module';
+import { FootballMatchModule } from './football-match/football-match.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    RedisModule.registerFromConfig(), // Ensure NestJS uses the configuration for connecting to both Redis and Prisma services
-    AppModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     PrismaModule,
-    BullModule.forRootAsync(BullModuleOptions), // Set up Bul letter with asynchronous support as required by our application logic
+    UserModule,
+    EmailModule,
+    JobsModule,
+    FootballMatchModule,
   ],
-  // ... goes in between
+  controllers: [AppController],
 })
 export class AppModule {}
